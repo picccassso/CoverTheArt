@@ -1,0 +1,58 @@
+./mongod --dbpath=data/db - start up mongodb
+
+
+sudo pkill mongod -- kill mongod 
+-----------------------------------------------------------
+postman test for users:
+
+http://localhost:8080/M00861387/users
+{
+    "username": "test",
+    "email": "test@gmail.com",
+    "password": "pass"
+}
+-----------------------------------------------------------
+postman test for login:
+
+http://localhost:8080/M00861387/login (this is for post)
+ 
+{
+    "email": "test@gmail.com",
+    "password": "pass"
+}
+
+Then you can GET
+-----------------------------------------------------------
+postman test for contents:
+
+http://localhost:8080/M00861387/contents (After logging in)
+
+{
+    "title": "test title",
+    "content": "test content"
+}
+
+Then you can GET
+-----------------------------------------------------------
+postman test for follow:
+
+http://localhost:8080/M00861387/follow
+
+{
+    "follower": "test@gmail.com",
+    "followee": "test1"
+}
+
+
+uuid 
+
+has to server side
+
+
+
+
+
+
+
+
+

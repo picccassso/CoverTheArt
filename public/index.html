@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoverTheArt</title>
+    <link rel="stylesheet" href="./CSS/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in',
+                        'fade-out': 'fadeOut 0.5s ease-out',
+                        'slide-in': 'slideIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'bounce-in': 'bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        fadeOut: {
+                            '0%': { opacity: '1' },
+                            '100%': { opacity: '0' }
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(0)' }
+                        },
+                        slideUp: {
+                            '0%': {
+                                transform: 'translateY(20px)',
+                                opacity: '0'
+                            },
+                            '100%': {
+                                transform: 'translateY(0)',
+                                opacity: '1'
+                            }
+                        },
+                        bounceIn: {
+                            '0%': {
+                                transform: 'scale(0.3)',
+                                opacity: '0'
+                            },
+                            '50%': {
+                                transform: 'scale(1.05)'
+                            },
+                            '70%': {
+                                transform: 'scale(0.9)'
+                            },
+                            '100%': {
+                                transform: 'scale(1)',
+                                opacity: '1'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<!-- Body -->
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white dark:bg-gray-800 shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <!-- Left navigation buttons -->
+                <div class="flex space-x-4 py-3">
+                    <button onclick="showPage('home')"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition-colors text-gray-700 dark:text-gray-200">
+                        Home
+                    </button>
+                    <button id="login-nav-btn" onclick="showPage('login')"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition-colors">
+                        Login
+                    </button>
+                    <button id="register-nav-btn" onclick="showPage('register')"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition-colors">
+                        Register
+                    </button>
+                    <button onclick="showPage('about')"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition-colors">
+                        About
+                    </button>
+                    <button onclick="handleLogout()" id="logout-nav-btn"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition-colors hidden">
+                        Logout
+                    </button>
+                    <button id="theme-toggle"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition-colors flex items-center">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path
+                                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Search form -->
+                <div class="relative">
+                    <form id="nav-search-form" class="flex items-center space-x-2">
+                        <input type="text" 
+                               id="nav-search-input" 
+                               placeholder="Search users..." 
+                               class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 
+                                      dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400" />
+                        <button type="submit" 
+                                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors
+                                       dark:bg-blue-600 dark:hover:bg-blue-700">
+                            Search Users
+                        </button>
+                    </form>
+                    <!-- Error message will be inserted here -->
+                    <div id="nav-search-error" 
+                         class="absolute left-0 right-0 mt-1 text-red-500 dark:text-red-400 text-sm animate-fade-in hidden">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Templates -->
+    <template id="home">
+        <div class="page max-w-6xl mx-auto mt-10 px-4 animate-fade-in">
+            <div class="flex gap-6">
+                <!-- Main Content Container (Left Side) -->
+                <div class="w-2/3">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm mb-6">
+                        <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Home Page</h1>
+
+                        <!-- Upload Form -->
+                        <div id="upload-section" class="mb-8 hidden">
+                            <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Upload Content</h2>
+                            <form id="upload-form" class="space-y-4">
+                                <div>
+                                    <label for="title"
+                                        class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Title</label>
+                                    <input type="text" id="title" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500
+                                                  dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                                </div>
+                                <div>
+                                    <label for="image" class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Image
+                                        (optional)</label>
+                                    <input type="file" id="image" name="image" accept="image/*" class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500
+                                                  dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 file:mr-4 
+                                                  file:py-2 file:px-4 file:rounded-full file:border-0
+                                                  file:text-sm file:font-semibold
+                                                  file:bg-blue-50 file:text-blue-700
+                                                  dark:file:bg-blue-900 dark:file:text-blue-200
+                                                  hover:file:bg-blue-100 dark:hover:file:bg-blue-800">
+                                </div>
+                                <div>
+                                    <label for="content"
+                                        class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Content</label>
+                                    <textarea id="content" rows="4" required
+                                        class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500
+                                                     dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"></textarea>
+                                </div>
+                                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors
+                                               dark:bg-blue-600 dark:hover:bg-blue-700">
+                                    Upload Content
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Login prompt -->
+                        <div id="login-prompt" class="mb-8 hidden">
+                            <div
+                                class="bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-900 rounded p-4 text-center">
+                                <p class="text-blue-800 dark:text-blue-300 mb-2">Please log in to upload content</p>
+                                <button onclick="showPage('login')"
+                                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors">
+                                    Login
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Search bar for contents-->
+                        <div class="mb-8">
+                            <form id="search-form" class="flex items-center space-x-2">
+                                <input type="text" id="search-input" placeholder="Search..."
+                                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
+                                              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400" />
+                                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors
+                                               dark:bg-blue-600 dark:hover:bg-blue-700">
+                                    Search
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Content Display -->
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Recent Contents</h2>
+                                <button id="sort-button"
+                                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+                                    Show Followed Only
+                                </button>
+                            </div>
+                            <div id="content-container" class="space-y-4">
+                                <!-- Content items will be dynamically inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side Container -->
+                <div class="w-1/3 trending-container">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+                        <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Trending</h2>
+                        <div class="space-y-4">
+                            <!-- Trending albums will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+    <!-- Login prompt -->
+    <template id="login">
+        <div class="page max-w-md mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md animate-fade-in">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-6 text-center">Login</h1>
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <input type="email" 
+                           placeholder="Email" 
+                           required
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
+                                  dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400">
+                </div>
+                <div>
+                    <input type="password" 
+                           placeholder="Password" 
+                           required
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
+                                  dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400">
+                </div>
+                <button type="submit"
+                        class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors
+                               dark:bg-blue-600 dark:hover:bg-blue-700">
+                    Login
+                </button>
+            </form>
+        </div>
+    </template>
+
+    <!-- Register prompt -->
+    <template id="register">
+        <div class="page max-w-md mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md animate-fade-in">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-6 text-center">Register</h1>
+            <form id="register-form" class="space-y-4">
+                <div>
+                    <input type="text" 
+                           id="register-username" 
+                           placeholder="Username" 
+                           required
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
+                                  dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400">
+                </div>
+                <div>
+                    <input type="email" 
+                           id="register-email" 
+                           placeholder="Email" 
+                           required
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
+                                  dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400">
+                </div>
+                <div>
+                    <input type="password" 
+                           id="register-password" 
+                           placeholder="Password" 
+                           required
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
+                                  dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400">
+                </div>
+                <button type="submit"
+                        class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors
+                               dark:bg-blue-600 dark:hover:bg-blue-700">
+                    Register
+                </button>
+            </form>
+        </div>
+    </template>
+
+    <!-- About Page Content-->
+    <template id="about">
+        <div class="max-w-6xl mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">About Us</h1>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+                Dive into the ultimate music community where fans connect, share, and explore! Engage in lively
+                discussions on our interactive forums, upload your favorite music-related text and images, and stay
+                inspired by following like-minded users. Whether you're into chart-toppers, underground beats, or
+                nostalgic classics, this platform is your hub for all things music. Join now and let the rhythm guide
+                your journey!
+            </p>
+
+            <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mt-6">Website Features:</h2>
+            <ul class="list-disc list-inside text-gray-600 dark:text-gray-300 mt-4">
+                <li>Interactive Music Forums: Engage in thoughtful discussions about your favorite music, genres, and
+                    artists. Dive into topics that inspire and connect with others who share your passion.</li>
+                <li>Search for Users: Discover and connect with like-minded music enthusiasts by searching for users
+                    based on their interests.</li>
+                <li>Follow and Customize Your Feed: Follow users whose posts resonate with you and enjoy a feed tailored
+                    to showcase only the content shared by them.</li>
+                <li>Post Images and Text Freely: Share whatever matters to you—whether it’s a memorable concert photo, a
+                    thought-provoking lyric, or a stunning album cover. Let your creativity shine!</li>
+                <li>Focus on Sharing, Not Messaging: The platform is designed to foster open sharing and discovery.
+                    There are no direct messages or comments, ensuring the spotlight stays on what you love to share.
+                </li>
+            </ul>
+
+            <p class="text-gray-600 dark:text-gray-300 mt-4">
+                Join a community built for expression and connection—where music fans share their world, free from
+                distractions.
+            </p>
+        </div>
+    </template>
+
+    <!-- Main content container -->
+    <main id="app"></main>
+
+    <!-- Scripts link -->
+    <script src="javascript/index.js"></script>
+    <script src="javascript/homePage.js"></script>
+    <script src="javascript/loginPage.js"></script>
+    <script src="javascript/registerPage.js"></script>
+    <script src="javascript/aboutPage.js"></script>
+    <script src="javascript/searchPage.js"></script>
+    <script src="javascript/trendingAlbums.js"></script>
+</body>
+
+</html>
